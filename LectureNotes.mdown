@@ -9,17 +9,16 @@
     - [Exception Handling](#exception-handling)
     - [Throwabe Class Hierarchy](#throwabe-class-hierarchy)
     - [Checked Exception](#checked-exception)
-    - [I dont understand](#i-dont-understand)
     - [Rules](#rules)
     - [Odds and Ends](#odds-and-ends)
 - [Iterator](#iterator)
     - [Design Situation](#design-situation)
     - [Components of Iterable Pattern](#components-of-iterable-pattern)
 - [Factory](#factory)
-    - [Factory Design Pattern](#factory-design-pattern)
     - [Singleton](#singleton)
     - [Multiton](#multiton)
     - [Dynamic Subclass Binding](#dynamic-subclass-binding)
+    - [I don't understand](#i-dont-understand)
 
 <!-- /MarkdownTOC -->
 
@@ -27,7 +26,7 @@
 <a name="composition-aggregation-and-delegation"></a>
 # Composition, Aggregation and Delegation
 <a name="composition"></a>
-### Composition 
+## Composition 
 dependent individual parts that make up the whole owned solely by the whole
 
 * Encapsulated objects craeted internally (no _setters_ and often no _getters_)
@@ -35,22 +34,20 @@ dependent individual parts that make up the whole owned solely by the whole
 * Functionality of encapsulated objects only accessible through the composition
 
 <a name="aggregation"></a>
-### Aggregation
+## Aggregation
 independent individual parts that make up the whole, but exist on themselves
 
 * Encapsulated objects provided externally
 * Encapsulated objects may be independently referenced outside
 
 <a name="delegation"></a>
-### Delegation
+## Delegation
 Claiming an 'is-a' relationship with an interface but relying on another object to actually do the work, ocurrs with either aggregation or composition
-
-_(**Do not Understand**)_
 
 <a name="exception"></a>
 # Exception
 <a name="exception-handling"></a>
-### Exception Handling
+## Exception Handling
 Unexpected, Disruptive, Possibly Fatal
 
 **Old Strategies**|**New Strategies** 
@@ -68,12 +65,11 @@ Special Return Value | Catching
 possibly valid situations that system should  <br> have some way of dealing with  | known as runtime exception
 eg. open nonexist files | exceptions that should never happen
 
-<br>
-##### Runtime Exceptions
+### Runtime Exceptions
 ``` java
 throw new RuntimeException(String)
 ```
-##### Runtime Exceptions
+### Catching Exceptions
 program will not end, can recover / deal with
 ``` java
 try{
@@ -83,7 +79,7 @@ catch ( ExceptionType Variable) {
     do something
 }
 ```
-##### Extending RuntimeExceptions
+### Extending RuntimeExceptions
 create runtime exception types, allows to encapsulate custom information about the exception
 ``` java
 public class NewException extends RuntimeException{
@@ -113,7 +109,7 @@ public yourProgram(){
     }
 }
 ```
-##### Finally Block
+### Finally Block
 will execute no matter what happends
 ```java
 try{  
@@ -125,7 +121,7 @@ try{
 
 
 <a name="throwabe-class-hierarchy"></a>
-### Throwabe Class Hierarchy
+## Throwabe Class Hierarchy
 
 <pre>
 <b>Throwable</b>
@@ -146,9 +142,7 @@ try{
 </pre>
 
 <a name="checked-exception"></a>
-### Checked Exception
-<a name="i-dont-understand"></a>
-### I dont understand
+## Checked Exception
 subject to the catch or specify rule
 this force the user of the method to explicitly handle the exception or pass the buck to whoever calls it, and enforces good error handling
 
@@ -168,8 +162,8 @@ public class NewClass{
 </pre>
 
 <a name="rules"></a>
-### Rules
-##### Be Specific
+## Rules
+### Be Specific
 
 * Using an existing exception type
 * Create own exception type
@@ -190,12 +184,12 @@ try{
 * If **Error2** is a subspace of **Error1**, throw **Error2** before **Error1** otherwise Error2 will never be reached.
 
 <a name="throw-early"></a>
-##### Throw Early
+### Throw Early
 
 * validate values as early as possible
 
 <a name="odds-and-ends"></a>
-### Odds and Ends
+## Odds and Ends
 
 * the scope of a variable is limited to the surrounding block (if declare inside a try block)
 * sibling catch blocks can reuse error variable name
@@ -209,7 +203,7 @@ try{
 <a name="iterator"></a>
 # Iterator
 <a name="design-situation"></a>
-### Design Situation
+## Design Situation
 suppose we have an object that encapsulates some sort of collection
 **Not provide access to underlying collection**
 
@@ -226,28 +220,28 @@ suppose we have an object that encapsulates some sort of collection
 
 * to avoid multiple query
 
-##### Design Pattern
+### Design Pattern
 provide a way to access the elements of an aggregate object sequentially without exposing its underlying representation
 
 * encapsulates details of iten traversal(understand details, manage orders, and manage state to be picked up later)
 * Assuming underlying collection is not changed or modified while iterating
 
 <a name="components-of-iterable-pattern"></a>
-### Components of Iterable Pattern
+## Components of Iterable Pattern
 **Iterable** provides a method that returns an object that acts as an iterator, which provide access to elements in turn
 **Java Collections Framework** defines two generic interfaces for supporting iterable design pattern
 
 * **Iterable<E>** iterator()
 * **Iterator<E>**
 
-##### Iterator<E>
+### Iterator<E>
 ```java
 boolean <b>hasNext</b>
 E next // throws a runtime exception if no next item
 void remove() // not supported by all, safely remeove last item
 ```
 
-##### for-each
+### for-each
 'syntactic sugar' for a particularly common use of iterators
 ```java
 for (E elem: collection){
@@ -278,7 +272,7 @@ Contexts | Description
 **Complex Construction** | When the construction of object requires validation <br>When null should be a valid result<br>When an existing object might be provided instead of a new one
 
 <a name="singleton"></a>
-### Singleton
+## Singleton
 When there should only be one instance of a parAcular class in the whole system at any given time.
 ```java
 public class Singleton{
@@ -297,7 +291,7 @@ public class Singleton{
 ```
 
 <a name="multiton"></a>
-### Multiton
+## Multiton
 Maintains a single instance of the object with regard to some uniquely identifyinf characteristic of object
 
 ```java
@@ -323,7 +317,7 @@ public class Multiton{
 
 ```
 
-##### Notes on Map<K,V> and HashMap<K,V>
+#### Notes on Map<K,V> and HashMap<K,V>
 Usually implemented using a **map**
 ```java
 Public interface Map<K,V>{}; // not actually valid statement
@@ -340,7 +334,7 @@ newMap.remove(key);
 ```
 
 <a name="dynamic-subclass-binding"></a>
-### Dynamic Subclass Binding
+## Dynamic Subclass Binding
 useful when choice needs to be made between several different subclasses
 ``` java
 public abstract class DSB {
@@ -380,6 +374,11 @@ public SubclassOFF extends DSB{
 
 
 
+
+<a name="i-dont-understand"></a>
+## I don't understand
+Delegation
+Checked Exception
 
 
 
