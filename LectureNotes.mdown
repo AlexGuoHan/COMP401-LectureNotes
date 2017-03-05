@@ -1,0 +1,396 @@
+# Table of Contents  
+<!-- MarkdownTOC depth=2 autoanchor='true' autolink='true' bracket='round' -->
+
+- [Composition, Aggregation and Delegation](#composition-aggregation-and-delegation)
+    - [Composition](#composition)
+    - [Aggregation](#aggregation)
+    - [Delegation](#delegation)
+- [Exception](#exception)
+    - [Exception Handling](#exception-handling)
+    - [Throwabe Class Hierarchy](#throwabe-class-hierarchy)
+    - [Checked Exception](#checked-exception)
+    - [I dont understand](#i-dont-understand)
+    - [Rules](#rules)
+    - [Odds and Ends](#odds-and-ends)
+- [Iterator](#iterator)
+    - [Design Situation](#design-situation)
+    - [Components of Iterable Pattern](#components-of-iterable-pattern)
+- [Factory](#factory)
+    - [Factory Design Pattern](#factory-design-pattern)
+    - [Singleton](#singleton)
+    - [Multiton](#multiton)
+    - [Dynamic Subclass Binding](#dynamic-subclass-binding)
+
+<!-- /MarkdownTOC -->
+
+
+<a name="composition-aggregation-and-delegation"></a>
+# Composition, Aggregation and Delegation
+<a name="composition"></a>
+### Composition 
+dependent individual parts that make up the whole owned solely by the whole
+
+* Encapsulated objects craeted internally (no _setters_ and often no _getters_)
+* Encapsulated objects do not make sense outside of te abstraction (not shared)
+* Functionality of encapsulated objects only accessible through the composition
+
+<a name="aggregation"></a>
+### Aggregation
+independent individual parts that make up the whole, but exist on themselves
+
+* Encapsulated objects provided externally
+* Encapsulated objects may be independently referenced outside
+
+<a name="delegation"></a>
+### Delegation
+Claiming an 'is-a' relationship with an interface but relying on another object to actually do the work, ocurrs with either aggregation or composition
+
+_(**Do not Understand**)_
+
+<a name="exception"></a>
+# Exception
+<a name="exception-handling"></a>
+### Exception Handling
+Unexpected, Disruptive, Possibly Fatal
+
+**Old Strategies**|**New Strategies** 
+:---:|:---:
+Global Error Code | Throwing 
+Special Return Value | Catching
+
+* Promotes good software engineering
+* Provides an abstraction for error, and information of error is encapsulated into an objectm
+* Improves code organization
+
+
+**Checked**|**Unchecked**
+:---|:---
+possibly valid situations that system should  <br> have some way of dealing with  | known as runtime exception
+eg. open nonexist files | exceptions that should never happen
+
+<br>
+##### Runtime Exceptions
+``` java
+throw new RuntimeException(String)
+```
+##### Runtime Exceptions
+program will not end, can recover / deal with
+``` java
+try{
+    do something
+}
+catch ( ExceptionType Variable) {
+    do something
+}
+```
+##### Extending RuntimeExceptions
+create runtime exception types, allows to encapsulate custom information about the exception
+``` java
+public class NewException extends RuntimeException{
+    public NewException( someVariable ){
+        super( String );
+        do something
+    }
+    @Override
+    public String getMessage(){
+        // eg.
+        return super.getMessage() + " lol you get an error"
+    }
+}
+
+public yourProgram(){
+    if( you get an error ){
+    throw new NewException( some variable );
+    }
+}
+
+public yourProgram(){
+    try{
+        some buggy codes;
+    }
+    catch( NewException ne){
+        do something
+    }
+}
+```
+##### Finally Block
+will execute no matter what happends
+```java
+try{  
+} catch(){
+} finally {
+    closeFile(); 
+}
+```
+
+
+<a name="throwabe-class-hierarchy"></a>
+### Throwabe Class Hierarchy
+
+<pre>
+<b>Throwable</b>
+│   supercalss for all objects that can be thrown   
+│   
+└─── <b>Error</b>
+│   ("Unchecked")
+│   superclass for errors caused by external conditions
+│
+└─── <b>Exception</b>
+    │   superclass for exceptions caused by internal conditions
+    │
+    └─── <b>RuntimeException</b> 
+    │   ("Unchecked")
+    │
+    │
+    └─── ("Checked")
+</pre>
+
+<a name="checked-exception"></a>
+### Checked Exception
+<a name="i-dont-understand"></a>
+### I dont understand
+subject to the catch or specify rule
+this force the user of the method to explicitly handle the exception or pass the buck to whoever calls it, and enforces good error handling
+
+* a method that could potentially throw a checked exception must declare the possibility as part of its method signature
+* a method that calls another method that throws a checked exception must
+    - **catch** include the code that catches the exception
+    - **specify** declare the possibility of exception as part of its own method signature
+
+<pre>
+public class NewClass{
+    public Method(something) <b>throws NewException</b> {
+        if( has bugs ){
+            throw new NewException(something)
+        }
+    }
+}
+</pre>
+
+<a name="rules"></a>
+### Rules
+##### Be Specific
+
+* Using an existing exception type
+* Create own exception type
+
+<pre>
+try{
+    buggy codes
+} catch (<b>lessSpecificException</b> ) {
+    throw new <b>moreSpecificException</b>
+    // can also add context specific error messgae 
+}
+</pre>
+
+<a name="catch-late"></a>
+##### Catch Late
+
+* Exceptions should rise to the level where application has enough context to deal with them effectively.
+* If **Error2** is a subspace of **Error1**, throw **Error2** before **Error1** otherwise Error2 will never be reached.
+
+<a name="throw-early"></a>
+##### Throw Early
+
+* validate values as early as possible
+
+<a name="odds-and-ends"></a>
+### Odds and Ends
+
+* the scope of a variable is limited to the surrounding block (if declare inside a try block)
+* sibling catch blocks can reuse error variable name
+* a catch block associated with an exception cannot precede a catch associated with a subclass (unreachable code)
+* nested try-catch-finally blocks
+* interfaces must declare any checked exceptions thrown by any of its implmentations
+* finally always runs (even if **return** from within a try or catch block)
+
+
+
+<a name="iterator"></a>
+# Iterator
+<a name="design-situation"></a>
+### Design Situation
+suppose we have an object that encapsulates some sort of collection
+**Not provide access to underlying collection**
+
+* to avoid outside access to the encapsulated files 
+* to avoid the fact that there may be no 'end' (generative process)
+* to avoid provide a large file all at once
+
+**Not to provide index access to each item**
+
+* to avoid generative collections 
+* to avoid restrictions and deterioates encapsulation
+
+**Not to internalize a 'Cursor'**
+
+* to avoid multiple query
+
+##### Design Pattern
+provide a way to access the elements of an aggregate object sequentially without exposing its underlying representation
+
+* encapsulates details of iten traversal(understand details, manage orders, and manage state to be picked up later)
+* Assuming underlying collection is not changed or modified while iterating
+
+<a name="components-of-iterable-pattern"></a>
+### Components of Iterable Pattern
+**Iterable** provides a method that returns an object that acts as an iterator, which provide access to elements in turn
+**Java Collections Framework** defines two generic interfaces for supporting iterable design pattern
+
+* **Iterable<E>** iterator()
+* **Iterator<E>**
+
+##### Iterator<E>
+```java
+boolean <b>hasNext</b>
+E next // throws a runtime exception if no next item
+void remove() // not supported by all, safely remeove last item
+```
+
+##### for-each
+'syntactic sugar' for a particularly common use of iterators
+```java
+for (E elem: collection){
+    // do something
+}
+```
+the same work with arrays
+```java
+for(Type variable: Array){
+    // do something
+}
+```
+
+<a name="factory"></a>
+# Factory
+<a name="factory-design-pattern"></a>
+### Factory Design Pattern
+when direct construction of an object is undesired:
+```java
+undesired = new NewObject(something);
+```
+
+Contexts | Description
+:-------- |:--------
+**Singleton** |  when there should only be one instance of a particular class in the whole system
+**Multiton** | When there should only be one instance of an object associated with some identifying property
+**Dynamic Subclass Binding** | When the specific subclass of an object can only be determined at the time that it is created
+**Complex Construction** | When the construction of object requires validation <br>When null should be a valid result<br>When an existing object might be provided instead of a new one
+
+<a name="singleton"></a>
+### Singleton
+When there should only be one instance of a parAcular class in the whole system at any given time.
+```java
+public class Singleton{
+    private fields; // stored in a private static variable
+    private Singleton(something){ // make the constructor private
+        // do something
+    }
+    public static SingletonGetter(something){ // public static getter
+        // the factory method
+        if(this.fields == null){ // none exist yet
+            this.fields = new Singleton(something);
+        }
+        return this.fields;
+    }
+}
+```
+
+<a name="multiton"></a>
+### Multiton
+Maintains a single instance of the object with regard to some uniquely identifyinf characteristic of object
+
+```java
+public class Multiton{
+    private fields;
+    pricate Multiton(something){
+        // do something
+    }
+
+    private Multiton static Map<K,V> newMap = new HashMap<K,V>();
+    public static Multiton getMultiton(input){
+        if(newMap.containsKey(input)){
+            // if the property is satisfied, returns the existing one
+            return newMap.get(input)
+        } else{
+            // create a new object if necessary
+            Multiton newMultiton = new Multiton(input);
+            newMap.put(input);
+            return newMultiton;
+        }
+    }
+}
+
+```
+
+##### Notes on Map<K,V> and HashMap<K,V>
+Usually implemented using a **map**
+```java
+Public interface Map<K,V>{}; // not actually valid statement
+Public HashMap<K,V> implements Map<K,V>{}; // see above
+// basic operations
+Map<K,V> newMap = new HashMap<K,V>();
+newMap.put(key,value);
+V newValue = newMap.get(key);
+boolean newBool = newMap.containsKey(key);
+newMap.remove(key);
+
+// Map only work with reference types, but Java provides reference type versions of basic value types (int, double, and character)
+
+```
+
+<a name="dynamic-subclass-binding"></a>
+### Dynamic Subclass Binding
+useful when choice needs to be made between several different subclasses
+``` java
+public abstract class DSB {
+    static boolean state;
+    static public void TurnItOff(){state = false;}
+    static public void TurnItOn(){state = true;}
+    abstract public void usefulMethod();
+
+    static public DSB() { // indirect factory method
+        if(state){return new TurnItOn();}
+        else{return new TurnItOff();}
+    }
+}
+
+public SubclassON extends DSB{
+    protected SubclassON(){ 
+        // do something
+    }
+    
+    public void usefulMethod(){
+        // do something
+    }
+}
+
+public SubclassOFF extends DSB{
+    protected SubclassOFF(){ 
+        do something
+    }
+    
+    public void usefulMethod(){
+        // do something
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
