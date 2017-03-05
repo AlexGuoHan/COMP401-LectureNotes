@@ -377,7 +377,7 @@ public SubclassOFF extends DSB{
 
 <a name="i-dont-understand"></a>
 ## I don't understand
-Delegation
+Delegation 
 Checked Exception
 
 
