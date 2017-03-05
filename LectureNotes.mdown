@@ -9,7 +9,8 @@
     - [Exception Handling](#exception-handling)
     - [Throwabe Class Hierarchy](#throwabe-class-hierarchy)
     - [Checked Exception](#checked-exception)
-    - [Rules](#rules)
+    - [Additional Notes on Checked and Unchecked Exceptions](#additional-notes-on-checked-and-unchecked-exceptions)
+    - [General Principles](#general-principles)
     - [Odds and Ends](#odds-and-ends)
 - [Iterator](#iterator)
     - [Design Situation](#design-situation)
@@ -122,7 +123,6 @@ try{
 
 <a name="throwabe-class-hierarchy"></a>
 ## Throwabe Class Hierarchy
-
 <pre>
 <b>Throwable</b>
 │   supercalss for all objects that can be thrown   
@@ -151,18 +151,68 @@ this force the user of the method to explicitly handle the exception or pass the
     - **catch** include the code that catches the exception
     - **specify** declare the possibility of exception as part of its own method signature
 
-<pre>
+``` java
+public class NewException extends Exception{
+    public NewException(something){
+        super("a message")
+        // do something
+    }
+}
 public class NewClass{
-    public Method(something) <b>throws NewException</b> {
+    // must declare the possibility as part of its method signature
+    // force the user to explicitly handle the exception, or pass it to whoever calls it
+    public Method(something) throws NewException {
         if( has bugs ){
             throw new NewException(something)
         }
     }
 }
-</pre>
+```
 
-<a name="rules"></a>
-## Rules
+<a name="additional-notes-on-checked-and-unchecked-exceptions"></a>
+## Additional Notes on Checked and Unchecked Exceptions
+**Checked**
+the exceptions that are checked at compile time, while the unchecked exception are checked at runtime. If some codes within a method throws a chekced exception, then the method **must** either handle the exception or it must specify the exception using the **throws** keyword
+``` java
+// FileReader() throws a chekced exception
+class program_Cant_Compile {
+    public static void main(String[] args){
+        FileReader file = new FileReader(directory);
+        // do something
+    }
+}
+
+class method1_Declare_Exception {
+    public static void main(String[] args) throws theCheckedException {
+        FileReader file = new FileReader(directory);
+        // do somethng
+    }
+}
+
+class method2_TryCatch {
+    public static void main(String[] args){
+        try{
+            FileReader file = new Finally(directory);
+        } catch (ExceptionType e){
+            // do something
+        }
+}
+
+// This will throw a ArithmeticException an unchecked exception
+// all unchecked exceptions are direct subclasses of RuntimeException
+class program_Also_Compiles {
+    public static void main(Stringp[] args) {
+        int x = 0;
+        int z = 10/x;
+    }
+}
+```
+**Bottom Line**
+If a client can reasonably be expected to recover from an exception, make it a chekced exception, if cannot do anythingfrom the exception, make it an unchecked excetion.
+
+
+<a name="general-principles"></a>
+## General Principles
 ### Be Specific
 
 * Using an existing exception type
