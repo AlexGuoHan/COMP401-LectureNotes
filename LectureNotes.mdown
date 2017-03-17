@@ -1,6 +1,16 @@
 # Table of Contents  
 <!-- MarkdownTOC depth=2 autoanchor='true' autolink='true' bracket='round' -->
 
+- [Prior Lectures](#prior-lectures)
+- [Encapsulation](#encapsulation)
+    - [Principles of Encapsulation](#principles-of-encapsulation)
+- [Generics](#generics)
+- [Polymorphism and Subclassing / Subinterfacing](#polymorphism-and-subclassing--subinterfacing)
+    - [Constructor Chaining](#constructor-chaining)
+    - [Overloading](#overloading)
+    - [Is-A](#is-a)
+    - [Abstract Classes](#abstract-classes)
+- [Enumerations](#enumerations)
 - [Composition, Aggregation and Delegation](#composition-aggregation-and-delegation)
     - [Composition](#composition)
     - [Aggregation](#aggregation)
@@ -19,9 +29,170 @@
     - [Singleton](#singleton)
     - [Multiton](#multiton)
     - [Dynamic Subclass Binding](#dynamic-subclass-binding)
-    - [I don't understand](#i-dont-understand)
+- [Notes for Practice Midterm 1](#notes-for-practice-midterm-1)
+    - [Inheritance](#inheritance)
+    - [Composition and Aggregation](#composition-and-aggregation)
 
 <!-- /MarkdownTOC -->
+
+<a name="prior-lectures"></a>
+# Prior Lectures
+
+* All code in Java is organized into classes and interfacs
+    - one public class / interface per file (convention) that matches the filename
+* Java complier produces byte code
+* Java interpreter executes the program
+    - need to specify Main Class
+    - `public static void main(String[] args`
+
+
+**Comments** `//` or `/* */`
+
+Primitive Value Types | Reference Types
+:---|:---
+Integers <br>Real numbers <br>Booleans <br>Character | An object <br> String, Array <br>user object (class or interface) <br>classes themselves 
+defined entirely by their value | structures in memory <br>(identified uniquely by address in memory)
+
+Packages | Classes | Methods
+:---|:---|:---
+package is a collection of classes | collection of functions (for now) | another name for a function / procedure
+`package packageName;` | `public class{}` | `signature {}`
+
+**Method Declaration**
+
+Access Modifier | Method Type | Return type | Method name | Parameter List
+:---|:---|:---|:---|:---
+`public, private, protected` default `package access` | `static` or default | `type or void` | start with letter, `$ or _`, contains those and numbers | `(param)`
+
+**Local Variable Declaration**
+
+* a local variable is valid with the blocks of statements with declaration occurs, _scope_
+* parameter names are local variables in scope for the entire method body
+
+**Ternary operator** 
+operator that takes three arguments[1]. The arguments and result can be of different types. Many programming languages that use C-like syntax[2] feature a ternary operator, ?:, which defines a conditional expression. Since this operator is often the only existing ternary operator in the language, it is sometimes simply referred to as "the ternary operator".
+
+**Switch**
+
+* work with basic data types and strings
+* default and break
+
+**Calling Methods**
+calling a method defined in a different class `ClassName.methodName(param)`
+calling a class method defined in a differnt package `PackageName.ClassName.methodName(param)`
+
+**Import Directive**
+map class names from other packages into current name space `import package.*;`
+
+**Precedence**, mixing integer and doubles `10 / 12 * 12.0`
+
+**String**
+
+* Objects
+* string is immutable 
+    - can't change once created (not array of characters)
+    - if the same string occurs twice, can simply reuse the same object (optimization)
+* `String.methods()`
+    - `length(), charAt(), equals(), substring(), trim(), indexOf()`
+* `String.fields or reference.fields`
+
+**Arrays**
+
+* index starts at 0
+* the array structure is of type array, but type of individual elements must be specified
+* fixed length and cannot be resized
+* initialized to 0 (numeric and char), false (bool) and null(reference)
+* literal arrays  
+    - variable declaration`Type[] array = { ,..., }`  
+    - set an existing variable `newArray = new Type[] {,...,}`  
+* cannot change size, but individual elements can change 
+* when passed to a method, reference is passed
+* can `clone()` 
+* multidimensional arrays
+
+``` java
+int[][] marray = new int[5][];
+for(iint i=0; i<5; i++) {marray[i] = new int[someSize];}
+
+int[][] marray = new int[size1][size2];
+```
+
+**Review of non-OO approch**
+* all functions are static
+* declared locally or passed in as parameters
+* static class functions simply act as a library of functions used by our application
+
+**Static Class Fields**
+* instance fields are data associated with each instance
+* class fields are data associated with the class as a whole (`static`
+
+
+
+
+<a name="encapsulation"></a>
+# Encapsulation
+<a name="principles-of-encapsulation"></a>
+## Principles of Encapsulation
+
+* do not expose the internal state of an object directly
+    - make all fields private
+    - public methods that retrieve properties (getter and setter)
+        + setter validation
+* separate exposed behavior from internal behavior
+    - define an interface for all exposed behavior
+        + like a contract
+        + name of interface can be used as a type name, with its value can be set to any object that is an instance of a class that implements the interface
+    - mark constructors public 
+
+**Interfaces**
+
+* implementing classes **must** declare these methods as public
+
+<a name="generics"></a>
+# Generics
+one that is defined with respect to one or more "placeholders" reference types
+
+* when used, the programmer must specify the specific type that replaces the placeholder (class name or interface name)
+
+<a name="polymorphism-and-subclassing--subinterfacing"></a>
+# Polymorphism and Subclassing / Subinterfacing
+general principle of providing access to an abstraction or method in many forms
+<a name="constructor-chaining"></a>
+## Constructor Chaining
+the first line of code in the constructor must be _this_ keyword as if a function with parameters
+<a name="overloading"></a>
+## Overloading
+
+* return type may not be the same
+* method type must be the same (instance or class method)
+* access modifer must be the same
+* parameter list must be different
+
+<a name="is-a"></a>
+## Is-A
+
+* a class that implements an interface: `A implements B`, then A is a B
+* a child class is a parent class
+* Multiple interface inheritance is allowed
+* Single class inheritance is allowed
+
+Covariance | Contravariance
+:---|:---
+treating  an instance of a subclass as an instance of parent class | treating a reference typed parent class as an instance of a subclass
+can be typed checked at compile time | cannot be type checked at compile time
+
+<a name="abstract-classes"></a>
+## Abstract Classes
+use "abstract" modifer when declaring parent class
+add "abstract" modifier to method signature, and semicolon following signature
+
+<a name="enumerations"></a>
+# Enumerations
+can be defined within an interface
+``` java
+    accessType enum enumName { symbol1, symbol2, ...};
+```
+
 
 
 <a name="composition-aggregation-and-delegation"></a>
@@ -196,6 +367,7 @@ class method2_TryCatch {
         } catch (ExceptionType e){
             // do something
         }
+    }
 }
 
 // This will throw a ArithmeticException an unchecked exception
@@ -207,6 +379,7 @@ class program_Also_Compiles {
     }
 }
 ```
+
 **Bottom Line**
 If a client can reasonably be expected to recover from an exception, make it a chekced exception, if cannot do anythingfrom the exception, make it an unchecked excetion.
 
@@ -278,7 +451,12 @@ provide a way to access the elements of an aggregate object sequentially without
 
 <a name="components-of-iterable-pattern"></a>
 ## Components of Iterable Pattern
-**Iterable** provides a method that returns an object that acts as an iterator, which provide access to elements in turn
+
+* Collection object is iterable 
+    - provides a method that returns an object that acts as an iterator, which provide access to elements in turn   
+* iterator object provides access to the elements in turn
+
+
 **Java Collections Framework** defines two generic interfaces for supporting iterable design pattern
 
 * **Iterable<E>** iterator()
@@ -294,15 +472,43 @@ void remove() // not supported by all, safely remeove last item
 ### for-each
 'syntactic sugar' for a particularly common use of iterators
 ```java
+
+// suppose collection is Iterable<E>
+
 for (E elem: collection){
     // do something
 }
+
+// is the same as
+Iterator<E> iter = collection.iterator();
+while(iter.hasNext()){
+    E elem = iter.next();
+    // do something
+}
 ```
-the same work with arrays
+the same work with arrays (with no index provided)
 ```java
 for(Type variable: Array){
     // do something
 }
+```
+
+When working with Hashmap / Map
+``` java
+for (K key: myMap.keySet()){
+    // do something    
+}
+
+for (V value: myMap.values()){
+    // do something
+}
+
+for (Map.Entry<K,V> entry: myMap.entrySet()){
+    K key = entry.getKey();
+    V value = entry.getValye();
+    // do something
+}
+
 ```
 
 <a name="factory"></a>
@@ -425,11 +631,26 @@ public SubclassOFF extends DSB{
 
 
 
-<a name="i-dont-understand"></a>
-## I don't understand
-Delegation  
-Checked Exception
 
+
+<a name="notes-for-practice-midterm-1"></a>
+# Notes for Practice Midterm 1
+
+<a name="inheritance"></a>
+## Inheritance
+
+* multiple inheritance for interfaces are permitted, but multiple inheritance for classes are not permitted in java.
+
+<a name="composition-and-aggregation"></a>
+## Composition and Aggregation
+
+Composition | Aggregation
+:---|:---
+objects are built internally | objects are built externally and passed into constructor
+usually no `getters()` and `setters()` | can have `getters()` and `setters()`
+
+
+one about Iterator
 
 
 
