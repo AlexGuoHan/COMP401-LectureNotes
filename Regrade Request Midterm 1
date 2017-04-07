@@ -1,0 +1,25 @@
+Regrade Request
+
+For the Part 3 question 2.1 and 2.2, I got points deducted for the following reasons:
+(2.1) 
+	a. not marked abstract
+	b. inappropriately encapsulates price/cost/weight
+	c. getCost() should be abstract
+(2.2)
+	e. soldByWeight should encapsulate weight and price
+	f. soldByUnit should encapsulate count and price
+
+
+Explanation of my code:
+The way my program works is by having the parent class (ItemImpl) encapsulates most of the information, and have subsequent child classes "super" all the information up to parent classes. 
+
+
+Regrade for b:
+	In the ItemImpl class, I make no distinction between "price per unit" or "price per pound" but simply treat them as "price per something" and have child class "super" relevant price information to the parent constructor. I do so because I believe at the parent class (ItemImpl), low level-information like the unit/pound do not have to be specified. 
+Regrade for a:
+	Since all the information necessary to execute the ItemImpl methods are already available, (I "super" all the information up from child classes) I do not have to mark ItemImpl as abstract.
+Regrade c:
+	While definitely not optimal, I write two getCost() methods: one in the ItemImpl class and the other in child classes (soldByUnit and soleByPound). The getCost() method in parent class refers to "get the price per something", and the child getCost() function returns "super.getCost() * this.getWeight()". Since all the information required for executing the getCost() in parent class is ready available, I don't have to mark it as abstract.
+
+Regrade for e and f:
+	Since I pass the price information to the parent class, and have parent class encapsulates it, there is no need to encapsulate the price information at child level.

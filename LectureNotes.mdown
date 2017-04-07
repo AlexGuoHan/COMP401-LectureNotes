@@ -29,6 +29,13 @@
     - [Singleton](#singleton)
     - [Multiton](#multiton)
     - [Dynamic Subclass Binding](#dynamic-subclass-binding)
+- [Decorator](#decorator)
+    - [Additional Notes](#additional-notes)
+- [Observer / Observable](#observer--observable)
+    - [Basic](#basic)
+    - [Refined](#refined)
+    - [Observer, Observable in Java.util](#observer-observable-in-javautil)
+    - [Delegating Observable](#delegating-observable)
 - [Notes for Practice Midterm 1](#notes-for-practice-midterm-1)
     - [Inheritance](#inheritance)
     - [Composition and Aggregation](#composition-and-aggregation)
@@ -627,6 +634,247 @@ public SubclassOFF extends DSB{
 ```
 
 
+<a name="decorator"></a>
+# Decorator
+Useful when you want to add additional state or functionality to a class without formally subclassing. Decorator replies on delegation
+* When additional state / functionality is auxiliary to object's main purpose
+* When additional state / functionality is local to collection or some other class encapsulating the object 
+* Emulating multiple inheritance 
+
+### Decorator Pattern Recipe
+0. Start with an interface, create one when necessary
+1. Extend interface, declaring additional funcitonality
+2. Create an implementation of the decorated interface 
+``` java
+public class Decorator implements decoratedInterface{
+    private oriInterface;
+    private otherInformation;
+
+    public Decorator (oriInterface oriInstance, otherInformation other){
+        // delegate original interface method to the encapsulated original object
+    }
+}
+```
+
+### Decorator avoids subclassing
+* It applies to interfaces (it decorates the interface)
+
+### Undecorating
+provide method to get back original in decorated interface
+``` java
+public INTF getWrapped(){
+    return this.wrapped_intf;
+}
+```
+
+<a name="additional-notes"></a>
+## Additional Notes 
+In the decorator pattern, a decoratir object is wrapped around the original object. This is achieved by having the original object as a member of the decorator, with the decorator forwarding the requests to the original object and implementing the new functionality. 
+``` java
+
+// Component interface
+public interface IComponent{
+    // do something
+}
+
+// Concrete component
+public class Component implements IComponent{
+    // do something
+}
+
+// Decorator
+public interface Decorator extends IComponent{
+    // do something
+    // add behaviors
+}
+
+public class ConcreteDecorator implements Decorator {
+    IComponent component;
+    public ConcreteDecorator(IComponent component){
+        super();
+        this.component = component;
+    }
+
+    public void added_Behavior(){
+        // do something
+    }
+
+    public void original_behavior(){
+        // do something
+    }
+}
+
+Public class Client{
+    public static void main (String[] args){
+        IComponent comp = new Component();
+        Decorator decorator = new ConcreteDecorator(com);
+    }
+}
+
+
+
+
+```
+
+<pre>
+<b>Decorator</b>
+
+────────────────────────────>   Interface INTF {}
+│                                        │
+│                                        │
+│                                        │
+└─── Class CL implements INTF            │
+                                         │
+                                         │
+                                         │
+                            Interface DINTF extends INTF
+                                         │
+                                         │
+                                         │
+                            class DC implements DINTF {
+                                private INTF wrapped_intf;
+                                constructor(INTF i){ // do something }
+                            }
+</pre>
+
+
+
+
+<a name="observer--observable"></a>
+# Observer / Observable
+Official Gang of Four description. It defines a one-to-many dependency between obkects so that when one object changes state, all its dependencies are notified and updated automatically
+
+Observable | Observer
+:---|:---
+object of Interest | interested object
+object that may change | objects that need to be updated if observable changes
+
+<a name="basic"></a>
+## Basic
+defining Observer as an interface allows any class to act as an observer for the Observable class
+
+``` java
+public interface Observer{
+    void update();
+}
+
+public class Observable{
+    List<Observer> observers;
+
+    void addObserver(Observer 0){
+        observers.add(o);
+    }
+
+    void deleteObserver(Observer 0){
+        observers.remove(o);
+    }
+
+    void notifyObservers(){
+        for (Observer o: observers){
+            o.update()
+        }
+    }
+}
+```
+
+<a name="refined"></a>
+## Refined
+the functions requires input
+encapsulate what changed as additional information for the update method
+``` java
+public interface Observer{
+    void update(Observable o, Info info);
+}
+
+public class Observable{
+    List<Observer> observers;
+
+    void register(Observer o){
+        observers.add(o)''
+    }
+
+    void unregister(Observer o){
+        observers.remove(o);
+    }
+
+    void notifyObservers(Info info){
+        for (Observer o : observers){
+            o.update(this, info)
+        }
+    }
+}
+```
+
+<a name="observer-observable-in-javautil"></a>
+## Observer, Observable in Java.util
+the pattern is defined by relationship between objects and their interactions. 
+Observer object regiters with observable
+Observable invokes a method on observers in order to signal state changes
+
+``` java
+import java.util.Observable
+public class myObservable extends Observable implements myObservableIntf {
+    // no longer have to manage the list since inhert it from Observable
+    public void changeState(something s){
+        // do something
+        setChanged() // required, otherwie won't do anything
+        notifyObservers(s);
+    }
+}
+
+import java.util.Observer
+public class myObserver implements Observer {
+    public void update(Observable o, Object arg){
+        // parameters are no longer context specific
+        // contravariant casts are required 
+        myObservableIntf obb = (myObservable) o;
+        myInformation info = (myInformation) arg;
+    }
+}
+
+public class Main {
+    public static void main(String[] args){
+        // do something
+        myObservable obb = new myObservable;
+        obb.addObserver(something);
+    }
+}
+```
+
+<a name="delegating-observable"></a>
+## Delegating Observable
+* Create a helper class that does subclass observable
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -650,12 +898,24 @@ objects are built internally | objects are built externally and passed into cons
 usually no `getters()` and `setters()` | can have `getters()` and `setters()`
 
 
-one about Iterator
 
 
+``` java
+// Junit Test
+import comp401.*
 
+@Test
+public void testGetRedPlateCount(){
+    Belt b = new Belt(5);
+    PlateCounter counter = new PlateCounter(b);
 
+    for (int i=0; i<5; i++){
+        Plate red = new RedPlate();
+        b.setPlateAtPosition(red, i)
+    }
 
+    assertEqual(3, counter.getRedPlateCount())
+}
 
 
 
